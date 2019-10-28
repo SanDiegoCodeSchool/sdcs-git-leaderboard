@@ -1,21 +1,48 @@
-require('dotenv').config();
-
+const fetch = require("node-fetch");
 const express = require('express');
 
 const app = express();
 
 app.use(express.static('public'));
 
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const GITHUB_EMAIL = process.env.GITHUB_EMAIL;
-const GITHUB_USER = process.env.GITHUB_USER;
+let cache = {
+    'Austin-Gray': {
+        '10/27/2019': 'stuff'
+    },
+    'jhkim8268': {
 
-const Github = require('octokat')({ token: GITHUB_TOKEN })
+    },
+}
+var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0');
+var yyyy = today.getFullYear();
 
-let cache = {}
+today = mm + '/' + dd + '/' + yyyy;
 
-app.get('/api', (req, res) => {
-// add some logic to return the data for all users
-});
+var userArray = Object.keys(cache);
+var arrLength = userArray.length;
+var counter = 0;
+
+// Trying to loop through fetch req work in progress
+
+// function fetchNow(counter) {
+//     fetch(`https://api.github.com/users/${userArray[counter]}/events`)
+//         .then(res => {
+//             if (counter === arrLength) {
+//                 return res.json()
+//             }
+//             else {
+//                 return fetchNow(++counter);
+//             }
+//         })
+// }
+
+// app.get('/api', (req, res) => {
+//     fetchNow(counter)
+//         .then(response => response.json())
+//         .then(data => console.log(data))
+//         .catch(error => console.error(error))
+// })
 
 module.exports = app;
