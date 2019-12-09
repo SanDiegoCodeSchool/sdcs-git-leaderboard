@@ -74,7 +74,8 @@ app.get('/data', function(req, res) {
   //fetchDataFromCache(cache);
   res.json(response);
 });
-app.get('/test', function(req, res) {
+
+app.get('/getUserScores', function(req, res) {
   let frontEndMockData = [
     {
         "username": "firstUser",
