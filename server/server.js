@@ -14,7 +14,7 @@ let cache = {};
 var queue = [];
 
 function calculatePoints(commitNumber) {
-  switch(commitNumber) {
+  switch (commitNumber) {
     case 0:
       return 0;
     case 1:
@@ -28,21 +28,45 @@ function calculatePoints(commitNumber) {
 
 function getUsersCommits(username) {
   // return axios.get(`https://api.github.com/users/${username}/events`)
-  return mockData()
-    .then(response => {
-      response.data.map(data => {
-        let commitCount = 0;
-        if(!!data.payload.commits) commitCount = data.payload.commits.length;
-        calculatePoints(commitCount);
-      })
+  axios.get('https://api.github.com/search/commits?q=author:cavanstewart+committer-date:>2019-12-01',
+    {
+      headers: {
+        Accept: 'application/vnd.github.cloak-preview'
+      }
+    }).then((data) => {
+      return data;
     })
-    .catch(error => console.error(error));
- }
+  // return mockData()
+  //   .then(response => {
+  //     response.data.map(data => {
+  //       let commitCount = 0;
+  //       if (!!data.payload.commits) commitCount = data.payload.commits.length;
+  //       calculatePoints(commitCount);
+  //     })
+  //   })
+  //   .catch(error => console.error(error));
+}
+
+app.get('/test', function (req, res) {
+  const obj = axios.get('https://api.github.com/search/commits?q=author:cavanstewart+committer-date:>2019-12-01',
+    {
+      headers: {
+        Accept: 'application/vnd.github.cloak-preview'
+      }
+    }).then((data) => {
+      return data.data.items;
+    })
+    .catch(err => console.error(err))
+
+    for(let i = 0; i < obj.length;i++) {
+      console.log(items[i].commit.committer.date)
+    }
+});
 
 function isDataMissing(cache, myUsers) {
   let yesterday = moment().subtract(1, 'day').format("MM-DD-YYYY");
 
-  var results = myUsers.map((username)=> {
+  var results = myUsers.map((username) => {
     if (!cache[username + yesterday]) {
       // TODO: before we push in the queue, make sure it doesn't exist already there.
       queue.push(username);
@@ -68,8 +92,8 @@ function fetchDataFromCache(cache) {
 
 }
 
-app.get('/data', function(req, res) {
-  var response = [isDataMissing(cache, myUsers),queue];
+app.get('/data', function (req, res) {
+  var response = [isDataMissing(cache, myUsers), queue];
   //processQueue(queue);
   //fetchDataFromCache(cache);
   res.json(response);
