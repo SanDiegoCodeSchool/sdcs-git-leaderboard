@@ -74,6 +74,23 @@ app.get('/data', function(req, res) {
   //fetchDataFromCache(cache);
   res.json(response);
 });
+app.get('/test', function(req, res) {
+  let frontEndMockData = [
+    {
+        "username": "firstUser",
+        "points": 5012
+    },
+    {
+        "username": "secondUser",
+        "points": 9182
+    },
+    {
+        "username": "thirdUser",
+        "points": 1736
+    }
+]
+  res.json(frontEndMockData);
+});
 
 function mockData() {
   return new Promise((resolve, reject) => {
