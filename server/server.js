@@ -1,19 +1,19 @@
 const express = require('express');
 const githubData = require('./data');
 const axios = require('axios');
-var moment = require('moment');
+const moment = require('moment');
 
 const app = express();
+
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-var myUsers = ["darrell3001", "MikeMurrayDev", "michaelerobertsjr"];
-var today = moment().format();
-var seventhDayFromToday = moment().subtract(7, 'days').calendar();
-
+let myUsers = ["darrell3001", "MikeMurrayDev", "michaelerobertsjr"];
+let today = moment().format();
+let seventhDayFromToday = moment().subtract(7, 'days').calendar();
 let cache = {};
-var queue = [];
+let queue = [];
 
 function calculatePoints(commitNumber) {
   switch(commitNumber) {
@@ -44,12 +44,11 @@ function getUsersCommits(username) {
 function addUsersNeedingUpdateToTheQueue(cache, myUsers) {
   let yesterday = moment().subtract(1, 'day').format("MM-DD-YYYY");
 
-  var results = myUsers.map((username)=> {
+  return myUsers.map((username)=> {
     if (!cache[username + yesterday]) {
       queue.push(username);
     };
   });
-  return results;
 }
 
 function processQueue(queue) {
