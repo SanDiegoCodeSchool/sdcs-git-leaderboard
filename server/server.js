@@ -5,6 +5,8 @@ var moment = require('moment');
 
 const app = express();
 app.use(express.static('public'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 var myUsers = ["darrell3001", "MikeMurrayDev", "michaelerobertsjr"];
 var today = moment().format();
@@ -23,7 +25,7 @@ function calculatePoints(commitNumber) {
       return 7;
     default:
       return commitNumber + 5
-  }
+  };
 }
 
 function getUsersCommits(username) {
@@ -34,20 +36,18 @@ function getUsersCommits(username) {
         let commitCount = 0;
         if(!!data.payload.commits) commitCount = data.payload.commits.length;
         calculatePoints(commitCount);
-      })
+      });
     })
     .catch(error => console.error(error));
  }
 
-function isDataMissing(cache, myUsers) {
+function addUsersNeedingUpdateToTheQueue(cache, myUsers) {
   let yesterday = moment().subtract(1, 'day').format("MM-DD-YYYY");
 
   var results = myUsers.map((username)=> {
     if (!cache[username + yesterday]) {
-      // TODO: before we push in the queue, make sure it doesn't exist already there.
       queue.push(username);
-    }
-    return `Checked user ${username} on ${yesterday} for commits.`
+    };
   });
   return results;
 }
@@ -65,14 +65,18 @@ function fetchDataFromCache(cache) {
    * }
    *
    */
-
 }
 
 app.get('/data', function(req, res) {
-  var response = [isDataMissing(cache, myUsers),queue];
+  var response = [addUsersNeedingUpdateToTheQueue(cache, myUsers),queue];
   //processQueue(queue);
   //fetchDataFromCache(cache);
   res.json(response);
+});
+
+app.post('/postUser', function(req, res) {
+  myUsers.push(req.body.username);
+  return res.json(req.body);
 });
 
 app.get('/getUserScores', function(req, res) {

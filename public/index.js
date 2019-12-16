@@ -1,7 +1,9 @@
 // TODO: this is a work in progress, should be able to add new users to the list to track
 function addUser() {
-    var userInput = document.getElementById("user-input").value;
-    userInput.appendTo("competitors");
+    var usernameInput = {
+        "username": document.getElementById("user-input").value
+    };
+    $.post("http://localhost:3000/postUser", usernameInput);
 };
 
 function populateTable() {
