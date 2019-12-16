@@ -98,7 +98,7 @@ app.get('/getUserScores', function(req, res) {
 
 app.delete('/deleteUsers/:userName', function(req, res) {
   delete cache[req.params.userName];
-  res.json(cache);
+  res.json(req.params.userName);
 })
 
 function mockData() {

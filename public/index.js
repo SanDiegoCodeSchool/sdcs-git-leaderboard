@@ -8,9 +8,9 @@ function addUser() {
 };
 
 function populateTable() {
-    $.get("/getUserScores", function (data) {
-        data.sort((a, b) => b.points - a.points);
-        var sortedData = data.map((student, i) =>
+    $.get("/getUserScores", function (allScores) {
+        allScores.sort((a, b) => b.points - a.points);
+        var sortedData = allScores.map((student, i) =>
             `<tr>
             <td>${i + 1}</td>
             <td>${student.username}</td>
@@ -21,14 +21,12 @@ function populateTable() {
 }
 
 function deleteUser() {
-    let userInput = document.getElementById("user-input").value;
+    let github_id = document.getElementById("user-input").value;
     $.ajax({
-
-        url: "http://localhost:3000/deleteUsers/" + userInput,
+        url: "/deleteUsers/" + github_id,
         type: 'DELETE',
         success: function(result) {
-            // Do something with the result
-            alert("You Have Successfully Deleted User " + userInput);
+            alert("You Have Successfully Deleted User: " + result);
         }
     });
 }
