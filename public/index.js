@@ -1,22 +1,25 @@
-// TODO: this is a work in progress, should be able to add new users to the list to track
-
 function addUser() {
     var usernameInput = {
         "username": document.getElementById("user-input").value
     };
     $.post("/postUser", usernameInput);
+    location.reload();
 };
 
 function populateTable() {
     $.get("/getUserScores", function (allScores) {
         allScores.sort((a, b) => b.points - a.points);
         var sortedData = allScores.map((student, i) =>
-            `<tr>
+        `<tr>
             <td>${i + 1}</td>
-            <td>${student.username}</td>
+            <td>
+                <img style="border-radius: 50%;" src="${student.avatar}" width="50px" height="50px"/>
+                ${student.username}
+            </td>
             <td>${student.points}</td>
         </tr>`);
         $('tbody').append(sortedData);
+        console.log(allScores)
     });
 }
 
@@ -29,6 +32,7 @@ function deleteUser() {
             alert("You Have Successfully Deleted User: " + result);
         }
     });
+    location.reload();
 }
 
 function reverseRank() {
